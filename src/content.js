@@ -4,6 +4,8 @@ import {
   CHANGE_FONT
 } from './utils/actions';
 
+console.log('content');
+
 browser.runtime.onMessage.addListener((request) => {
   const { msg } = request;
   if (!msg) {

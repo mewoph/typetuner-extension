@@ -1,9 +1,10 @@
 <template>
-  <div class="popup">
+  <div class="popup font-mono p-5">
     <button @click="logConsole">Log in console</button>
     <button @click="changeBgColor">Change background</button>
     <button @click="changeFont">Toggle font</button>
     <div>Last response: {{ response }}</div>
+    <FontDrop/>
   </div>
 </template>
 
@@ -16,12 +17,18 @@ import {
   sendMessagePromise
 } from '../utils/actions';
 
+import FontDrop from '@/components/FontDrop';
+
 export default {
   data() {
     return {
       fontToggled: true,
       response: '',
     };
+  },
+
+  components: {
+    FontDrop,
   },
 
   computed: {},
@@ -52,7 +59,7 @@ export default {
       });
       this.fontToggled = !this.fontToggled;
     }
-  }
+  },
 };
 </script>
 
