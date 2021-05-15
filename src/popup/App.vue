@@ -56,7 +56,7 @@ export default {
 };
 </script>
 
-<style scoped lang="scss">
+<style>
 .popup {
   width: 400px;
   height: 400px;
