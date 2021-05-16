@@ -15,16 +15,20 @@
         <label for="file-input" class="absolute inset-0 flex items-center justify-center text-center text-3xl font-black">Drop font file</label>
       </div>
     </div>
-    <div v-if="this.file">
+    <div v-if="this.isFontLoaded" :style="fontStyle">
+      Hamburgefontsiv
     </div>
   </div>
 </template>
 
 <script>
+import { sendMessagePromise, LOAD_FONT } from '@/utils/actions';
+
 export default {
   data() {
     return {
       file: null,
+      isFontLoaded: false
     };
   },
 
@@ -32,11 +36,18 @@ export default {
     fileName() {
       return this.file.name;
     },
+    fontStyle() {
+      return {
+        fontFamily: 'testfont',
+        fontSize: '32px',
+      };
+    },
   },
 
   methods: {
     removeFile() {
       this.file = null;
+      this.isFontLoaded = false;
     },
     dragenter(e) {
       e.stopPropagation();
@@ -56,8 +67,27 @@ export default {
     handleFiles(fileList) {
       for (let i = 0; i < fileList.length; i++) {
         this.file = fileList[i];
+        this.loadFontFace();
       }
     },
+    loadFontFace() {
+      const fontFileUrl = URL.createObjectURL(this.file);
+      // TODO: Proper metadata
+      const fontFace = new FontFace('testfont', `url(${fontFileUrl})`);
+      fontFace.load().then(loadedFont => {
+        document.fonts.add(loadedFont);
+        this.isFontLoaded = true;
+      }).catch(e => {
+        console.error(e);
+        this.isFontLoaded = false;
+      });
+
+      const fileReader = new FileReader();
+      fileReader.onload = () => {
+        sendMessagePromise({ action: LOAD_FONT, value: fileReader.result});
+      };
+      fileReader.readAsDataURL(this.file);
+    }
   },
 };
 </script>

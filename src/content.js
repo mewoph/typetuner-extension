@@ -1,7 +1,8 @@
 import {
   CONSOLE_PRINT,
   CHANGE_BG_COLOR,
-  CHANGE_FONT
+  CHANGE_FONT,
+  LOAD_FONT
 } from './utils/actions';
 
 console.log('content');
@@ -21,10 +22,20 @@ browser.runtime.onMessage.addListener((request) => {
     document.body.style.background = value;
 
   } else if (action === CHANGE_FONT) {
-    document.body.style.fontFamily = value;
+    // TODO: proper metadata
+    document.body.style.fontFamily = 'testfont';
     if (needsResponse) {
       return Promise.resolve({ msg: `Responded: ${Date.now()}`});
     }
+  
+  } else if (action === LOAD_FONT) {
+    // TODO: proper metadata
+    const fontFace = new FontFace('testfont', `url(${value})`);
+    fontFace.load().then(loadedFont => {
+        document.fonts.add(loadedFont);
+    }).catch(e => {
+      console.error(e);
+    });
   }
 
 });
