@@ -1,6 +1,10 @@
 {
   "extName": {
-    "message": "test-extension",
-    "description": ""
+    "message": "Font Calibrate",
+    "description": "Working name of the extension"
+  },
+  "previewText": {
+  	"message": "Hamburgefonts",
+  	"description": "Text to preview the dropped font"
   }
 }

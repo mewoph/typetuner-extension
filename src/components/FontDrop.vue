@@ -16,7 +16,7 @@
       </div>
     </div>
     <div v-if="this.isFontLoaded" :style="fontStyle">
-      Hamburgefontsiv
+      {{previewText}}
     </div>
   </div>
 </template>
@@ -42,6 +42,9 @@ export default {
         fontSize: '32px',
       };
     },
+    previewText() {
+      return chrome.i18n.getMessage('previewText');
+    }
   },
 
   methods: {

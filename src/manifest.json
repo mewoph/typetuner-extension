@@ -1,8 +1,8 @@
 {
   "manifest_version": 2,
-  "name": "__MSG_extName__",
+  "name": "Font Calibrate",
   "homepage_url": "http://localhost:8080/",
-  "description": "A Vue Browser Extension",
+  "description": "Test web fonts in context",
   "default_locale": "en",
   "permissions": [
     "activeTab",
@@ -22,18 +22,16 @@
   },
   "browser_action": {
     "default_popup": "popup.html",
-    "default_title": "__MSG_extName__",
+    "default_title": "Font Calibrate",
     "default_icon": {
       "19": "icons/19.png",
       "38": "icons/38.png"
     }
   },
-  "content_scripts": [
-  {
+  "content_scripts": [{
     "matches": [
       "<all_urls>"
     ],
     "js": ["js/content.js"]
-  }
-]
+  }]
 }
