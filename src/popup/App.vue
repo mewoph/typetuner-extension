@@ -4,7 +4,7 @@
     <FontControls v-else />
 
     <FontPreview v-if="canPreviewFont" :font-family="fontFamily" />
-    <div v-if="isDebugMode">Debug Message: {{ debugMessage }}</div>
+    <div class="fixed top-0 opacity-70" v-if="isDebugMode">Debug Message: {{ debugMessage }}</div>
   </div>
 </template>
 
