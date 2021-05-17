@@ -1,10 +1,15 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import extension from '@/store/modules/extension';
+
 import opentype from 'opentype.js';
 
 Vue.use(Vuex)
 
 export default new Vuex.Store({
+  modules: {
+    extension,
+  },
   state: {
     selectedFileName: null,
     fontFiles: {},
@@ -17,7 +22,7 @@ export default new Vuex.Store({
         return;
       }
       return fontData[selectedFileName];
-    }
+    },
   },
   mutations: {
     updateFontFile(state, file) {
@@ -60,6 +65,7 @@ export default new Vuex.Store({
       }
 
       // TODO: Pull in other fields from opentype.js
+      // TODO: Handle locale
       commit('updateFontData', {
         fileName: file.name,
         data: {
@@ -87,5 +93,16 @@ export default new Vuex.Store({
         console.error(e);
       }
     },
+    applySelectedFontToContent({ state, getters, dispatch }) {
+      const { fontFiles, selectedFileName } = state;
+      const { selectedFontData = {} } = getters;
+      const { fontFamily } = selectedFontData;
+      const fileReader = new FileReader();
+      fileReader.onload = () => {
+        const dataUrl = fileReader.result;
+        dispatch('extension/applyFontToContent', { url: dataUrl, fontFamily });
+      };
+      fileReader.readAsDataURL(fontFiles[selectedFileName]);
+    }
   },
 })

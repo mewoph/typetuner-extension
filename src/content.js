@@ -1,8 +1,6 @@
 import {
-  CONSOLE_PRINT,
-  CHANGE_BG_COLOR,
   CHANGE_FONT,
-  LOAD_FONT
+  LOAD_FONT,
 } from './utils/actions';
 
 browser.runtime.onMessage.addListener((request) => {
@@ -10,25 +8,18 @@ browser.runtime.onMessage.addListener((request) => {
   if (!msg) {
     return;
   }
-  console.log(msg);
 
   const { action, value, needsResponse } = msg;
-  if (action === CONSOLE_PRINT) {
-    console.log('message', value);
-
-  } else if (action === CHANGE_BG_COLOR) {
-    document.body.style.background = value;
-
-  } else if (action === CHANGE_FONT) {
-    // TODO: proper metadata
-    document.body.style.fontFamily = 'testfont';
+  if (action === CHANGE_FONT) {    
+    const { fontFamily } = value;
+    document.body.style.fontFamily = fontFamily;
     if (needsResponse) {
-      return Promise.resolve({ msg: `Responded: ${Date.now()}`});
+      return Promise.resolve({ msg: `Set ${fontFamily} at ${Date.now()}`});
     }
   
   } else if (action === LOAD_FONT) {
-    // TODO: proper metadata
-    const fontFace = new FontFace('testfont', `url(${value})`);
+    const { fontFamily, url } = value;
+    const fontFace = new FontFace(fontFamily, `url(${url})`);
     fontFace.load().then(loadedFont => {
         document.fonts.add(loadedFont);
     }).catch(e => {

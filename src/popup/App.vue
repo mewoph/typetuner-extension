@@ -1,39 +1,32 @@
 <template>
   <div class="popup font-mono p-5">
-    <button @click="logConsole">Log in console</button>
-    <button @click="changeBgColor">Change background</button>
-    <button @click="changeFont">Apply font</button>
-    <div>Last response: {{ response }}</div>
-    <FontDrop />
+    <FontDrop v-if="!selectedFontData"/>
+    <FontRemove v-else />
+
     <FontPreview v-if="canPreviewFont" :font-family="fontFamily" />
+    <Button
+      button-text="Apply font"
+      :is-disabled="!selectedFontData"
+      @click.native="applySelectedFontToContent"
+      />
+    <div v-if="isDebugMode">Debug Message: {{ debugMessage }}</div>
   </div>
 </template>
 
 <script>
-
-import {
-  CONSOLE_PRINT,
-  CHANGE_BG_COLOR,
-  CHANGE_FONT,
-  sendMessagePromise
-} from '../utils/actions';
-
 import FontDrop from '@/components/FontDrop';
+import FontRemove from '@/components/FontRemove';
 import FontPreview from '@/components/FontPreview';
+import Button from '@/components/Button';
 
-import { mapGetters } from 'vuex';
+import { mapState, mapGetters, mapActions } from 'vuex';
 
 export default {
-  data() {
-    return {
-      fontToggled: true,
-      response: '',
-    };
-  },
-
   components: {
     FontDrop,
+    FontRemove,
     FontPreview,
+    Button,
   },
 
   computed: {
@@ -46,34 +39,11 @@ export default {
       return selectedFontData.fontFamily;
     },
     ...mapGetters(['selectedFontData']),
+    ...mapState('extension', ['debugMessage', 'isDebugMode']),
   },
 
   methods: {
-    logConsole() {
-      browser.runtime.sendMessage({ content: 'response_needed' }).then(response => {
-        sendMessagePromise({ action: CONSOLE_PRINT, value: response.value });
-      });
-      sendMessagePromise({ action: CONSOLE_PRINT });
-    },
-    changeBgColor() {
-      const getRandomColorValue = () => {
-        return Math.floor(Math.random() * 255);
-      };
-      sendMessagePromise({
-        action: CHANGE_BG_COLOR,
-        value: `rgb(${getRandomColorValue()}, ${getRandomColorValue()}, ${getRandomColorValue()})`,
-      });
-    },
-    changeFont() {
-      sendMessagePromise({
-        action: CHANGE_FONT,
-        value: this.fontToggled ? 'serif' : 'sans-serif',
-        needsResponse: true,
-      }).then((response) => {
-        this.response = response.msg;
-      });
-      this.fontToggled = !this.fontToggled;
-    }
+    ...mapActions(['applySelectedFontToContent']),
   },
 };
 </script>
