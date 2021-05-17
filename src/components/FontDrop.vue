@@ -11,7 +11,7 @@
         <button @click="removeFile" class="text-red-700">Remove</button>
       </div>
       <div class="file-uploader" v-else>
-        <input type="file" id="file-input" class="hidden"/>
+        <input type="file" id="file-input" ref="fileInput" class="hidden" @change="onChange"/>
         <label for="file-input" class="absolute inset-0 flex items-center justify-center text-center text-3xl font-black">Drop font file</label>
       </div>
     </div>
@@ -51,18 +51,23 @@ export default {
     },
     dragenter(e) {
       e.stopPropagation();
+      e.preventDefault();
     },
     dragover(e) {
+      e.stopPropagation();
       e.preventDefault();
     },
     drop(e) {
       e.stopPropagation();
       e.preventDefault();
 
-      const dt = e.dataTransfer;
-      const files = dt.files;
+      const { dataTransfer } = e;
+      const { files } = dataTransfer;
 
       this.handleFiles(files);
+    },
+    onChange() {
+      this.handleFiles(this.$refs.fileInput.files);
     },
     handleFiles(fileList) {
       for (let i = 0; i < fileList.length; i++) {
@@ -70,23 +75,27 @@ export default {
         this.loadFontFace();
       }
     },
-    loadFontFace() {
-      const fontFileUrl = URL.createObjectURL(this.file);
-      // TODO: Proper metadata
-      const fontFace = new FontFace('testfont', `url(${fontFileUrl})`);
-      fontFace.load().then(loadedFont => {
-        document.fonts.add(loadedFont);
-        this.isFontLoaded = true;
-      }).catch(e => {
-        console.error(e);
-        this.isFontLoaded = false;
-      });
-
+    sendFontDataToContent() {
       const fileReader = new FileReader();
       fileReader.onload = () => {
         sendMessagePromise({ action: LOAD_FONT, value: fileReader.result});
       };
       fileReader.readAsDataURL(this.file);
+    },
+    async loadFontFace() {
+      this.sendFontDataToContent();
+
+      const fontFileUrl = URL.createObjectURL(this.file);
+      // TODO: Proper metadata
+      const fontFace = new FontFace('testfont', `url(${fontFileUrl})`);
+      try {
+        const loadedFont = await fontFace.load();
+        document.fonts.add(loadedFont);
+        this.isFontLoaded = true;
+      } catch(e) {
+        console.error(e);
+        this.isFontLoaded = false;
+      }
     }
   },
 };
