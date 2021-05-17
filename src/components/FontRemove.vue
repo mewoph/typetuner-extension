@@ -1,7 +1,7 @@
 <template>
-  <div class="w-full h-24 bg-gray-300 p-5 rounded-2xl text-white flex items-center">
+  <div class="font-drop-area rounded-t-2xl h-20 bg-gray-300">
     <div class="file-remover max-w-full">
-      <div class="font-black text-lg truncate">
+      <div class="font-bold text-base truncate">
         {{selectedFileName}}
       </div>
       <button @click="removeFile" class="text-red-700">Remove</button>

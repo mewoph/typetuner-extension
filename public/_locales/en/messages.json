@@ -4,7 +4,7 @@
     "description": "Working name of the extension"
   },
   "previewText": {
-  	"message": "Hamburgefonts",
+  	"message": "The quick brown fox jumps over the lazy dog.",
   	"description": "Text to preview the dropped font"
   }
 }

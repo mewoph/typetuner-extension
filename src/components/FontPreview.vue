@@ -1,6 +1,13 @@
 <template>
-  <div class="font-preview" :style="fontStyle">
-    {{previewText}}
+  <div class="font-preview p-5 rounded-b-2xl bg-gray-100 h-28">
+    <div class="text-xs">Preview</div>
+    <div
+      class="text-base focus:outline-none"
+      contenteditable
+      :style="fontStyle"
+      ref="textPreview">
+      {{previewText}}
+    </div>
   </div>
 </template>
 
@@ -18,10 +25,15 @@ export default {
     },
     fontStyle() {
       return {
-        fontFamily: this.fontFamily,
-        fontSize: '32px',
+        fontFamily: this.fontFamily
       };
     }
-  }
+  },
+  mounted() {
+    // Focus on contenteditable area
+    this.$nextTick(() => {
+      this.$refs.textPreview.focus();
+    });
+  },
 };
 </script>

@@ -1,12 +1,14 @@
 <template>
   <div class="font-drop relative">
-    <div class="w-full h-24 bg-gray-300 p-5 rounded-2xl text-white flex items-center"
+    <div class="font-drop-area h-48 text-white rounded-2xl"
+      :class="[ hasHoverState ? 'bg-gray-600' : 'bg-gray-300' ]"
       @dragenter="dragenter"
       @dragover="dragover"
+      @dragleave="dragleave"
       @drop="drop">
       <div class="file-uploader">
         <input type="file" id="file-input" ref="fileInput" class="hidden" @change="onChange"/>
-        <label for="file-input" class="absolute inset-0 flex items-center justify-center text-center text-3xl font-black">Drop font file</label>
+        <label for="file-input" class="absolute inset-0 flex items-center justify-center text-center text-2xl font-black">Drop font file here</label>
       </div>
     </div>
   </div>
@@ -16,20 +18,31 @@
 import { mapMutations, mapState } from 'vuex';
 
 export default {
+  data() {
+    return {
+      hasHoverState: false,
+    };
+  },
   computed: {
     ...mapState(['selectedFileName']),
   },
 
   methods: {
     dragenter(e) {
+      this.hasHoverState = true;
       e.stopPropagation();
       e.preventDefault();
     },
     dragover(e) {
+      this.hasHoverState = true;
       e.stopPropagation();
       e.preventDefault();
     },
+    dragleave() {
+      this.hasHoverState = false;
+    },
     drop(e) {
+      this.hasHoverState = false;
       e.stopPropagation();
       e.preventDefault();
 

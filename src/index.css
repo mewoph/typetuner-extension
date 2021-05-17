@@ -1,3 +1,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.font-drop-area {
+  @apply w-full p-5 flex items-center transition-colors duration-500;
+}
