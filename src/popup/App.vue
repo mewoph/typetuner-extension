@@ -2,9 +2,10 @@
   <div class="popup font-mono p-5">
     <button @click="logConsole">Log in console</button>
     <button @click="changeBgColor">Change background</button>
-    <button @click="changeFont">Toggle font</button>
+    <button @click="changeFont">Apply font</button>
     <div>Last response: {{ response }}</div>
-    <FontDrop/>
+    <FontDrop />
+    <FontPreview v-if="canPreviewFont" :font-family="fontFamily" />
   </div>
 </template>
 
@@ -18,6 +19,9 @@ import {
 } from '../utils/actions';
 
 import FontDrop from '@/components/FontDrop';
+import FontPreview from '@/components/FontPreview';
+
+import { mapGetters } from 'vuex';
 
 export default {
   data() {
@@ -29,9 +33,20 @@ export default {
 
   components: {
     FontDrop,
+    FontPreview,
   },
 
-  computed: {},
+  computed: {
+    canPreviewFont() {
+      const { selectedFontData = {} } = this;
+      return selectedFontData.isLoaded;
+    },
+    fontFamily() {
+      const { selectedFontData = {} } = this;
+      return selectedFontData.fontFamily;
+    },
+    ...mapGetters(['selectedFontData']),
+  },
 
   methods: {
     logConsole() {
