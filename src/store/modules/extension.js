@@ -8,16 +8,15 @@ import {
 export default {
   namespaced: true,
   state: {
-    isDebugMode: true,
+    isDebugMode: process.env.NODE_ENV === 'development',
     debugMessages: [],
     originalFontConfig: null,
     hasAppliedFontFamily: false,
-    hasAppliedFontVariationSettings: true,
     hasLoadedFont: false,
   },
   getters: {
     hasFontChanges: state => {
-      return !state.hasAppliedFontFamily || !state.hasAppliedFontVariationSettings;
+      return !state.hasAppliedFontFamily;
     },
     latestDebugMessage: state => {
       const { debugMessages } = state;
@@ -34,9 +33,6 @@ export default {
     updateHasAppliedFontFamily(state, hasAppliedFontFamily) {
       state.hasAppliedFontFamily = hasAppliedFontFamily;
     },
-    updateHasAppliedFontVariationSettings(state, hasAppliedFontVariationSettings) {
-      state.hasAppliedFontVariationSettings = hasAppliedFontVariationSettings;
-    },
     updateHasLoadedFont(state, hasLoadedFont) {
       state.hasLoadedFont = hasLoadedFont;
     },
@@ -45,7 +41,7 @@ export default {
     async initializeFontInContent({ state, commit }, { fontFamily, url }) {
       const { originalFontConfig } = state;
 
-      // TODO: Get this info from content page
+      // TODO: Get this info from content page, also account for other font settings
       if (!originalFontConfig) {
         commit('updateOriginalFontConfig', { fontFamily: 'sans-serif' });
       }
@@ -68,7 +64,6 @@ export default {
           action: CHANGE_FONT_VARIATION_SETTINGS,
           value: { fontVariationSettings }
         });
-        commit('updateHasAppliedFontVariationSettings', true);
         commit('addDebugMessage', changeFontResponse);
       } catch(e) {
         commit('addDebugMessage', e);

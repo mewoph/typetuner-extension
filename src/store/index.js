@@ -80,7 +80,7 @@ export default new Vuex.Store({
         return;
       }
 
-      // TODO: Handle locale for font family
+      // TODO: Handle locale for font family name
       commit('updateFontData', {
         fileName: file.name,
         data: {
@@ -126,9 +126,11 @@ export default new Vuex.Store({
         fontVariationSettings
       });
     },
-    updateFontVariation({ commit }, variation) {
+    updateFontVariation({ dispatch, getters, commit }, variation) {
       commit('updateSelectedFontVariation', variation);
       commit('extension/updateHasAppliedFontVariationSettings', false);
+      const { fontVariationSettings } = getters;
+      dispatch('extension/applyFontVariationSettingsToContent', fontVariationSettings);
     },
     removeSelectedFont({ commit }) {
       commit('deselectFont');
