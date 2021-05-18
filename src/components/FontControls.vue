@@ -5,14 +5,16 @@
         {{selectedFileName}}
       </div>
       <div class="flex justify-between mt-2">
-        <button @click="unapplyFont" v-if="hasAppliedFontToContent"
-          class="toggle-button bg-pink-700 hover:bg-purple-700">
-          {{ localize('unapplyFontCta') }}
-        </button>
-        <button @click="applyFont" v-else
+        <button @click="applyFont" v-if="hasFontChanges"
           class="toggle-button bg-purple-700 hover:bg-pink-700">
           {{ localize('applyFontCta') }}
         </button>
+
+        <button @click="unapplyFont" v-else
+          class="toggle-button bg-pink-700 hover:bg-purple-700">
+          {{ localize('unapplyFontCta') }}
+        </button>
+
         <button @click="removeFile"
           class="text-purple-800 hover:text-pink-700 focus:outline-none">
           {{ localize('differentFontCta') }}
@@ -23,12 +25,12 @@
 </template>
 
 <script>
-import { mapMutations, mapState, mapActions } from 'vuex';
+import { mapState, mapActions, mapGetters } from 'vuex';
 
 export default {
   computed: {
     ...mapState(['selectedFileName']),
-    ...mapState('extension', ['hasAppliedFontToContent']),
+    ...mapGetters('extension', ['hasFontChanges']),
   },
   methods: {
     removeFile() {
@@ -40,8 +42,7 @@ export default {
     unapplyFont() {
       this.unapplyFontFromContent();
     },
-    ...mapMutations(['removeSelectedFont']),
-    ...mapActions(['applySelectedFontToContent']),
+    ...mapActions(['applySelectedFontToContent', 'removeSelectedFont']),
     ...mapActions('extension', ['unapplyFontFromContent']),
   }
 };

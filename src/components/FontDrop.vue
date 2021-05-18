@@ -57,6 +57,7 @@ export default {
       this.handleFiles(this.$refs.fileInput.files);
     },
     handleFiles(fileList) {
+      // TODO: File format validation
       for (let i = 0; i < fileList.length; i++) {
         this.updateFontFile(fileList[i]);
       }

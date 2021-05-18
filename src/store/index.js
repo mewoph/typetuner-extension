@@ -54,14 +54,13 @@ export default new Vuex.Store({
         state.selectedFileName = Object.keys(fontFiles)[0];
       }
     },
-    removeSelectedFont(state) {
+    deselectFont(state) {
       Vue.delete(state.fontFiles, state.selectedFileName);
       Vue.delete(state.fontData, state.selectedFileName);
       state.selectedFileName = null;
       state.selectedFontVariation = {};
     },
     updateSelectedFontVariation(state, { tag , value }) {
-      const { selectedFontVariation } = state;
       Vue.set(state.selectedFontVariation, tag, value);
     },
   },
@@ -94,6 +93,7 @@ export default new Vuex.Store({
       if (!fontFamily || !url) {
         return;
       }
+      // Load font face in the popup for preview
       const fontFace = new FontFace(fontFamily, `url(${url})`);
       try {
         const loadedFont = await fontFace.load();
@@ -109,14 +109,24 @@ export default new Vuex.Store({
     },
     async applySelectedFontToContent({ state, getters, dispatch }) {
       const { fontFiles, selectedFileName } = state;
-      const { selectedFontData = {} } = getters;
+      const { selectedFontData = {}, fontVariationSettings } = getters;
       const { fontFamily } = selectedFontData;
       const dataUrl = await getDataUrl(fontFiles[selectedFileName]);
-      dispatch('extension/applyFontToContent', { url: dataUrl, fontFamily });
+      // TODO: Separate these into more atomic actions so
+      // dataUrl doesn't have to be passed if the font family is already loaded
+      dispatch('extension/applyFontToContent', {
+        url: dataUrl,
+        fontFamily,
+        fontVariationSettings
+      });
     },
     updateFontVariation({ commit }, variation) {
       commit('updateSelectedFontVariation', variation);
-      commit('extension/updateHasAppliedFontToContent', false);
+      commit('extension/updateHasAppliedFontVariationSettings', false);
     },
+    removeSelectedFont({ commit }) {
+      commit('deselectFont');
+      commit('extension/updateHasAppliedFontFamily', false);
+    }
   },
 })
