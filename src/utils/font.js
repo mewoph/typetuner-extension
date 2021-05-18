@@ -22,3 +22,12 @@ export const getVariationAxes = (opentypeData) => {
   }
   return tables.fvar.axes;
 };
+
+export const formatFontVariationSettings = (settings) => {
+  let str = '';
+  Object.entries(settings).forEach(([tagName, value], index) => {
+    const delimiter = index === 0 ? '' : ', ';
+    str += `${delimiter}'${tagName}' ${value}`;
+  });
+  return str;
+};

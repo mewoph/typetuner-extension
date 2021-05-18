@@ -1,5 +1,5 @@
 <template>
-  <div class="font-preview p-5 rounded-b-2xl bg-gray-100 h-24">
+  <div class="font-preview p-5 rounded-b-2xl bg-gray-100 min-h-24">
     <div class="text-xs">
       {{ localize('previewLabel', fontFamily) }}
     </div>
@@ -14,6 +14,8 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
+
 export default {
   props: {
     fontFamily: {
@@ -26,10 +28,16 @@ export default {
       return this.localize('previewText');
     },
     fontStyle() {
-      return {
-        fontFamily: this.fontFamily
+      const { fontFamily, fontVariationSettings } = this;
+      const style = {
+        fontFamily: fontFamily
       };
-    }
+      if (fontVariationSettings) {
+        style.fontVariationSettings = fontVariationSettings;
+      }
+      return style;
+    },
+    ...mapGetters(['fontVariationSettings']),
   },
   mounted() {
     // Focus on contenteditable area

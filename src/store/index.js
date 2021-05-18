@@ -1,7 +1,13 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import extension from '@/store/modules/extension';
-import { getDataUrl, getFontFamily, getVariationAxes } from '@/utils/font';
+
+import {
+  getDataUrl,
+  getFontFamily,
+  getVariationAxes,
+  formatFontVariationSettings
+} from '@/utils/font';
 import opentype from 'opentype.js';
 
 Vue.use(Vuex)
@@ -14,6 +20,7 @@ export default new Vuex.Store({
     selectedFileName: null,
     fontFiles: {},
     fontData: {},
+    selectedFontVariation: {},
   },
   getters: {
     selectedFontData: state => {
@@ -22,6 +29,9 @@ export default new Vuex.Store({
         return;
       }
       return fontData[selectedFileName];
+    },
+    fontVariationSettings: state => {
+      return formatFontVariationSettings(state.selectedFontVariation);
     },
   },
   mutations: {
@@ -48,7 +58,12 @@ export default new Vuex.Store({
       Vue.delete(state.fontFiles, state.selectedFileName);
       Vue.delete(state.fontData, state.selectedFileName);
       state.selectedFileName = null;
-    }
+      state.selectedFontVariation = {};
+    },
+    updateSelectedFontVariation(state, { tag , value }) {
+      const { selectedFontVariation } = state;
+      Vue.set(state.selectedFontVariation, tag, value);
+    },
   },
   actions: {
     async loadFontData({ commit }, file) {
