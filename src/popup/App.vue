@@ -6,7 +6,6 @@
     <FontControls v-else />
 
     <FontPreview v-if="canPreviewFont" :font-family="fontFamily" />
-
     <FontVariationAxes v-if="variationAxes.length" :axes="variationAxes" />
   </div>
 </template>

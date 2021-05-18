@@ -17,7 +17,7 @@
 </template>
 
 <script>
-import { mapMutations } from 'vuex';
+import { mapActions } from 'vuex';
 
 export default {
   props: {
@@ -37,9 +37,9 @@ export default {
   methods: {
     onChange() {
       const { axisData, axisValue: value } = this;
-      this.updateSelectedFontVariation({ tag: axisData.tag, value });
+      this.updateFontVariation({ tag: axisData.tag, value });
     },
-    ...mapMutations(['updateSelectedFontVariation']),
+    ...mapActions(['updateFontVariation']),
   },
 }
 </script>

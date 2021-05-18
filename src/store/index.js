@@ -113,6 +113,10 @@ export default new Vuex.Store({
       const { fontFamily } = selectedFontData;
       const dataUrl = await getDataUrl(fontFiles[selectedFileName]);
       dispatch('extension/applyFontToContent', { url: dataUrl, fontFamily });
-    }
+    },
+    updateFontVariation({ commit }, variation) {
+      commit('updateSelectedFontVariation', variation);
+      commit('extension/updateHasAppliedFontToContent', false);
+    },
   },
 })
