@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import extension from '@/store/modules/extension';
-
+import { getDataUrl, getFontFamily, getVariationAxes } from '@/utils/font';
 import opentype from 'opentype.js';
 
 Vue.use(Vuex)
@@ -52,7 +52,6 @@ export default new Vuex.Store({
   },
   actions: {
     async loadFontData({ commit }, file) {
-      console.log('loading data for', file);
       const fontFileUrl = URL.createObjectURL(file);
       let opentypeData;
       try {
@@ -64,13 +63,13 @@ export default new Vuex.Store({
         return;
       }
 
-      // TODO: Pull in other fields from opentype.js
-      // TODO: Handle locale
+      // TODO: Handle locale for font family
       commit('updateFontData', {
         fileName: file.name,
         data: {
-          fontFamily: opentypeData.names.fontFamily.en,
+          fontFamily: getFontFamily(opentypeData),
           url: fontFileUrl,
+          variationAxes: getVariationAxes(opentypeData)
         }
       });
     },
@@ -93,16 +92,12 @@ export default new Vuex.Store({
         console.error(e);
       }
     },
-    applySelectedFontToContent({ state, getters, dispatch }) {
+    async applySelectedFontToContent({ state, getters, dispatch }) {
       const { fontFiles, selectedFileName } = state;
       const { selectedFontData = {} } = getters;
       const { fontFamily } = selectedFontData;
-      const fileReader = new FileReader();
-      fileReader.onload = () => {
-        const dataUrl = fileReader.result;
-        dispatch('extension/applyFontToContent', { url: dataUrl, fontFamily });
-      };
-      fileReader.readAsDataURL(fontFiles[selectedFileName]);
+      const dataUrl = await getDataUrl(fontFiles[selectedFileName]);
+      dispatch('extension/applyFontToContent', { url: dataUrl, fontFamily });
     }
   },
 })

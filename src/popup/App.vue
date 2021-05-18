@@ -1,10 +1,13 @@
 <template>
-  <div class="popup font-mono p-5">
+  <div class="popup font-mono p-5 overflow-y-auto">
+    <div class="fixed top-0 opacity-70" v-if="isDebugMode">Debug Message: {{ debugMessage }}</div>
+
     <FontDrop v-if="!selectedFontData"/>
     <FontControls v-else />
 
     <FontPreview v-if="canPreviewFont" :font-family="fontFamily" />
-    <div class="fixed top-0 opacity-70" v-if="isDebugMode">Debug Message: {{ debugMessage }}</div>
+
+    <FontVariationAxes v-if="variationAxes.length" :axes="variationAxes" />
   </div>
 </template>
 
@@ -12,6 +15,7 @@
 import FontDrop from '@/components/FontDrop';
 import FontControls from '@/components/FontControls';
 import FontPreview from '@/components/FontPreview';
+import FontVariationAxes from '@/components/FontVariationAxes';
 
 import { mapState, mapGetters } from 'vuex';
 
@@ -20,6 +24,7 @@ export default {
     FontDrop,
     FontControls,
     FontPreview,
+    FontVariationAxes,
   },
 
   computed: {
@@ -30,6 +35,13 @@ export default {
     fontFamily() {
       const { selectedFontData = {} } = this;
       return selectedFontData.fontFamily;
+    },
+    variationAxes() {
+      const { selectedFontData } = this;
+      if (selectedFontData) {
+        return selectedFontData.variationAxes || [];
+      }
+      return [];
     },
     ...mapGetters(['selectedFontData']),
     ...mapState('extension', ['debugMessage', 'isDebugMode']),
