@@ -1,7 +1,7 @@
 <template>
   <div class="font-drop relative">
     <div class="font-drop-area h-48 text-white rounded-2xl"
-      :class="[ hasHoverState ? 'bg-gray-600' : 'bg-gray-300' ]"
+      :class="[ hasHoverState ? 'bg-purple-600' : 'bg-gray-300' ]"
       @dragenter="dragenter"
       @dragover="dragover"
       @dragleave="dragleave"

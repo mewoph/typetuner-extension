@@ -6,6 +6,7 @@ export default {
     isDebugMode: true,
     debugMessage: '',
     originalFontConfig: null,
+    hasAppliedFontToContent: false,
   },
   mutations: {
     updateOriginalFontConfig(state, config) {
@@ -13,6 +14,9 @@ export default {
     },
     updateDebugMessage(state, message) {
       state.debugMessage = message;
+    },
+    updateHasAppliedFontToContent(state, hasAppliedFontToContent) {
+      state.hasAppliedFontToContent = hasAppliedFontToContent;
     },
   },
   actions: {
@@ -33,6 +37,7 @@ export default {
           needsResponse: true
         });
         commit('updateDebugMessage', changeFontResponse.msg);
+        commit('updateHasAppliedFontToContent', true);
       } catch(e) {
         commit('updateDebugMessage', e);
       }
@@ -45,6 +50,7 @@ export default {
           needsResponse: true
         });
         commit('updateDebugMessage', changeFontResponse.msg);
+        commit('updateHasAppliedFontToContent', false);
       } catch(e) {
         commit('updateDebugMessage', e);
       }

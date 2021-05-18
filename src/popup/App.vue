@@ -1,5 +1,5 @@
 <template>
-  <div class="popup font-mono p-5 overflow-y-auto">
+  <div class="popup font-mono p-5 overflow-y-auto bg-gradient-to-b from-purple-100">
     <div class="fixed top-0 opacity-70" v-if="isDebugMode">Debug Message: {{ debugMessage }}</div>
 
     <FontDrop v-if="!selectedFontData"/>
