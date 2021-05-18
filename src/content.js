@@ -8,9 +8,11 @@ browser.runtime.onMessage.addListener((request) => {
   if (!msg) {
     return;
   }
-
   const { action, value, needsResponse } = msg;
-  if (action === CHANGE_FONT) {    
+
+  if (action === CHANGE_FONT) {
+    // TODO: Use CSS classes?
+    // TODO: Support setting font on elements other than body
     const { fontFamily } = value;
     document.body.style.fontFamily = fontFamily;
     if (needsResponse) {
