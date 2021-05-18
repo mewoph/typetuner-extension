@@ -7,15 +7,15 @@
       <div class="flex justify-between mt-2">
         <button @click="unapplyFont" v-if="hasAppliedFont"
           class="toggle-button">
-          Un-apply font
+          {{ localize('unapplyFontCta') }}
         </button>
         <button @click="applyFont" v-else
           class="toggle-button">
-          Apply font
+          {{ localize('applyFontCta') }}
         </button>
         <button @click="removeFile"
-          class="text-pink-800 hover:text-pink-500 focus:outline-none">
-          Use a different font
+          class="text-purple-800 hover:text-purple-500 focus:outline-none">
+          {{ localize('differentFontCta') }}
         </button>
       </div>
     </div>

@@ -8,7 +8,9 @@
       @drop="drop">
       <div class="file-uploader">
         <input type="file" id="file-input" ref="fileInput" class="hidden" @change="onChange"/>
-        <label for="file-input" class="absolute inset-0 flex items-center justify-center text-center text-2xl font-black">Drop font file here</label>
+        <label for="file-input" class="absolute inset-0 flex items-center justify-center text-center text-2xl font-black">
+          {{ localize('dropAreaLabel') }}
+        </label>
       </div>
     </div>
   </div>

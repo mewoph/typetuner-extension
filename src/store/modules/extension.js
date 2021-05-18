@@ -1,4 +1,4 @@
-import { LOAD_FONT, CHANGE_FONT, sendMessagePromise } from '@/utils/actions';
+import { LOAD_FONT, CHANGE_FONT, sendMessageToActiveTab } from '@/utils/actions';
 
 export default {
   namespaced: true,
@@ -23,11 +23,11 @@ export default {
       }
 
       try {
-        await sendMessagePromise({
+        await sendMessageToActiveTab({
           action: LOAD_FONT,
           value: { fontFamily, url }
         });
-        const changeFontResponse = await sendMessagePromise({
+        const changeFontResponse = await sendMessageToActiveTab({
           action: CHANGE_FONT,
           value: { fontFamily },
           needsResponse: true
@@ -39,7 +39,7 @@ export default {
     },
     async unapplyFontFromContent({ state, commit }) {
       try {
-        const changeFontResponse = await sendMessagePromise({
+        const changeFontResponse = await sendMessageToActiveTab({
           action: CHANGE_FONT,
           value: state.originalFontConfig,
           needsResponse: true
