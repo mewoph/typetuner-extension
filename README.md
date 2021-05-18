@@ -1,4 +1,6 @@
-# test-extension
+# font-calibrate
+
+Web extension for previewing local web font in context
 
 ## Project setup
 ```
@@ -9,6 +11,14 @@ npm install
 ```
 npm run serve
 ```
+
+### Development
+1. In Chrome, navigate to `chrome://extensions`
+2. Enable `Developer mode`
+3. Click load unpacked
+4. Choose app's `dist` directory
+
+The extension should be loaded in development mode.
 
 ### Compiles and minifies for production
 ```
