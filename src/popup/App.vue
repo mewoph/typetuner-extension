@@ -1,6 +1,8 @@
 <template>
   <div class="popup font-mono p-5 overflow-y-auto bg-gradient-to-b from-purple-100">
-    <div class="fixed top-0 opacity-70" v-if="isDebugMode">Debug Message: {{ debugMessage }}</div>
+    <div class="fixed top-0 opacity-70 z-10" v-if="isDebugMode">
+      DEBUG: {{ latestDebugMessage }}
+    </div>
 
     <FontDrop v-if="!selectedFontData"/>
     <FontControls v-else />
@@ -43,7 +45,8 @@ export default {
       return [];
     },
     ...mapGetters(['selectedFontData']),
-    ...mapState('extension', ['debugMessage', 'isDebugMode']),
+    ...mapGetters('extension', ['latestDebugMessage']),
+    ...mapState('extension', ['isDebugMode']),
   },
 };
 </script>

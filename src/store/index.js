@@ -63,6 +63,9 @@ export default new Vuex.Store({
     updateSelectedFontVariation(state, { tag , value }) {
       Vue.set(state.selectedFontVariation, tag, value);
     },
+    updateHasLoadedSelectedFont(state, hasLoadedSelectedFont) {
+      state.hasLoadedSelectedFont = hasLoadedSelectedFont;
+    },
   },
   actions: {
     async loadFontData({ commit }, file) {
@@ -107,15 +110,18 @@ export default new Vuex.Store({
         console.error(e);
       }
     },
-    async applySelectedFontToContent({ state, getters, dispatch }) {
+    async applySelectedFontToContent({ rootState, state, getters, dispatch }) {
       const { fontFiles, selectedFileName } = state;
+      const { extension } = rootState;
       const { selectedFontData = {}, fontVariationSettings } = getters;
       const { fontFamily } = selectedFontData;
-      const dataUrl = await getDataUrl(fontFiles[selectedFileName]);
-      // TODO: Separate these into more atomic actions so
-      // dataUrl doesn't have to be passed if the font family is already loaded
+
+      if (!extension.hasLoadedFont) {
+        const url = await getDataUrl(fontFiles[selectedFileName]);
+        await dispatch('extension/initializeFontInContent', { fontFamily, url });
+      }
+
       dispatch('extension/applyFontToContent', {
-        url: dataUrl,
         fontFamily,
         fontVariationSettings
       });
@@ -127,6 +133,7 @@ export default new Vuex.Store({
     removeSelectedFont({ commit }) {
       commit('deselectFont');
       commit('extension/updateHasAppliedFontFamily', false);
+      commit('extension/updateHasLoadedFont', false);
     }
   },
 })

@@ -13,11 +13,15 @@ export default {
     originalFontConfig: null,
     hasAppliedFontFamily: false,
     hasAppliedFontVariationSettings: true,
-    loadedFonts: [],
+    hasLoadedFont: false,
   },
   getters: {
     hasFontChanges: state => {
       return !state.hasAppliedFontFamily || !state.hasAppliedFontVariationSettings;
+    },
+    latestDebugMessage: state => {
+      const { debugMessages } = state;
+      return debugMessages[debugMessages.length - 1];
     },
   },
   mutations: {
@@ -33,26 +37,29 @@ export default {
     updateHasAppliedFontVariationSettings(state, hasAppliedFontVariationSettings) {
       state.hasAppliedFontVariationSettings = hasAppliedFontVariationSettings;
     },
-    updateLoadedFonts(state, loadedFont) {
-      state.loadedFonts.push(loadedFont);
+    updateHasLoadedFont(state, hasLoadedFont) {
+      state.hasLoadedFont = hasLoadedFont;
     },
   },
   actions: {
-    async loadFontInContentIfNeeded({ state, commit }, { fontFamily, url }) {
-      const { originalFontConfig, loadedFonts } = state;
-      if (loadedFonts.includes(fontFamily)) {
-        return;
-      }
+    async initializeFontInContent({ state, commit }, { fontFamily, url }) {
+      const { originalFontConfig } = state;
+
       // TODO: Get this info from content page
       if (!originalFontConfig) {
         commit('updateOriginalFontConfig', { fontFamily: 'sans-serif' });
       }
-      const loadFontResponse = await sendMessageToActiveTab({
-        action: LOAD_FONT,
-        value: { fontFamily, url }
-      });
-      commit('updateLoadedFonts', fontFamily);
-      commit('addDebugMessage', loadFontResponse);
+
+      try {
+        const loadFontResponse = await sendMessageToActiveTab({
+          action: LOAD_FONT,
+          value: { fontFamily, url }
+        });
+        commit('updateHasLoadedFont', true);
+        commit('addDebugMessage', loadFontResponse);
+      } catch(e) {
+        commit('addDebugMessage', e);
+      }
     },
 
     async applyFontVariationSettingsToContent({ commit }, fontVariationSettings) {
@@ -81,8 +88,7 @@ export default {
       }
     },
 
-    async applyFontToContent({ state, dispatch }, { fontFamily, url, fontVariationSettings }) {
-      await dispatch('loadFontInContentIfNeeded', { fontFamily, url });
+    async applyFontToContent({ state, dispatch }, { fontFamily, fontVariationSettings }) {
       const { hasAppliedFontFamily } = state;
       if (!hasAppliedFontFamily) {
         dispatch('applyFontFamilyToContent', fontFamily);
