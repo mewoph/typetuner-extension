@@ -136,7 +136,11 @@ export default new Vuex.Store({
         fontVariationSettings
       });
     },
-    updateFontVariation({ dispatch, getters, commit }, variation) {
+    async updateFontVariation({ rootState, dispatch, getters, commit }, variation) {
+      const { extension } = rootState;
+      if (!extension.hasAppliedFontFamily) {
+        await dispatch('applySelectedFontToContent');
+      }
       commit('updateSelectedFontVariation', variation);
       commit('extension/updateHasAppliedFontVariationSettings', false);
       const { fontVariationSettings } = getters;

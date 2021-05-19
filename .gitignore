@@ -27,3 +27,4 @@ pnpm-debug.log*
 *.pub
 *.zip
 /artifacts
+dist.crx
