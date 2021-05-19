@@ -8,6 +8,8 @@
     <FontControls v-else />
 
     <FontPreview v-if="canPreviewFont" :font-family="fontFamily" />
+    <ContentElements v-if="selectedFontData" />
+
     <FontVariationAxes v-if="variationAxes.length" :axes="variationAxes" />
   </div>
 </template>
@@ -17,6 +19,7 @@ import FontDrop from '@/components/FontDrop';
 import FontControls from '@/components/FontControls';
 import FontPreview from '@/components/FontPreview';
 import FontVariationAxes from '@/components/FontVariationAxes';
+import ContentElements from '@/components/ContentElements';
 
 import { mapState, mapGetters } from 'vuex';
 
@@ -26,6 +29,7 @@ export default {
     FontControls,
     FontPreview,
     FontVariationAxes,
+    ContentElements,
   },
 
   computed: {

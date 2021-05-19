@@ -2,8 +2,11 @@ import {
   LOAD_FONT,
   CHANGE_FONT_FAMILY,
   CHANGE_FONT_VARIATION_SETTINGS,
+  RESET_FONT,
   sendMessageToActiveTab
 } from '@/utils/actions';
+
+import Vue from 'vue';
 
 export default {
   namespaced: true,
@@ -13,6 +16,12 @@ export default {
     originalFontConfig: null,
     hasAppliedFontFamily: false,
     hasLoadedFont: false,
+    tagOptions: {
+      html: false,
+      body: true,
+      p: false,
+      h1: false,
+    },
   },
   getters: {
     hasFontChanges: state => {
@@ -21,6 +30,15 @@ export default {
     latestDebugMessage: state => {
       const { debugMessages } = state;
       return debugMessages[debugMessages.length - 1];
+    },
+    activeTagNames: state => {
+      const { tagOptions } = state;
+      return Object.entries(tagOptions).reduce((accumulator, [tagName, isSelected]) => {
+        if (isSelected) {
+          accumulator.push(tagName);
+        }
+        return accumulator;
+      }, []);
     },
   },
   mutations: {
@@ -36,16 +54,22 @@ export default {
     updateHasLoadedFont(state, hasLoadedFont) {
       state.hasLoadedFont = hasLoadedFont;
     },
+    addActiveTag(state, tagName) {
+      Vue.set(state.tagOptions, tagName, true);
+    },
+    removeActiveTag(state, tagName) {
+      Vue.set(state.tagOptions, tagName, false);
+    },
+    deselectAllTags(state) {
+      const { tagOptions } = state;
+      for (const key of Object.keys(tagOptions)) {
+        tagOptions[key] = false;
+      }
+      state.tagOptions = tagOptions;
+    },
   },
   actions: {
-    async initializeFontInContent({ state, commit }, { fontFamily, url }) {
-      const { originalFontConfig } = state;
-
-      // TODO: Get this info from content page, also account for other font settings
-      if (!originalFontConfig) {
-        commit('updateOriginalFontConfig', { fontFamily: 'sans-serif' });
-      }
-
+    async initializeFontInContent({ commit }, { fontFamily, url }) {
       try {
         const loadFontResponse = await sendMessageToActiveTab({
           action: LOAD_FONT,
@@ -58,11 +82,11 @@ export default {
       }
     },
 
-    async applyFontVariationSettingsToContent({ commit }, fontVariationSettings) {
+    async applyFontVariationSettingsToContent({ commit, getters }, fontVariationSettings) {
       try {
         const changeFontResponse = await sendMessageToActiveTab({
           action: CHANGE_FONT_VARIATION_SETTINGS,
-          value: { fontVariationSettings }
+          value: { fontVariationSettings, tags: getters.activeTagNames }
         });
         commit('addDebugMessage', changeFontResponse);
       } catch(e) {
@@ -70,11 +94,12 @@ export default {
       }
     },
 
-    async applyFontFamilyToContent({ commit }, fontFamily) {
+    async applyFontFamilyToContent({ commit, getters }, fontFamily) {
+      console.log('active', getters.activeTagNames);
       try {
         const changeFontResponse = await sendMessageToActiveTab({
           action: CHANGE_FONT_FAMILY,
-          value: { fontFamily }
+          value: { fontFamily, tags: getters.activeTagNames }
         });
         commit('updateHasAppliedFontFamily', true);
         commit('addDebugMessage', changeFontResponse);
@@ -93,12 +118,15 @@ export default {
       }
     },
 
-    async unapplyFontFromContent({ state, commit }) {
+    async unapplyFontFromContent({ commit }, tag) {
+      if (!tag) {
+        commit('deselectAllTags');
+      }
+
       try {
         const changeFontResponse = await sendMessageToActiveTab({
-          action: CHANGE_FONT_FAMILY,
-          value: state.originalFontConfig,
-          needsResponse: true
+          action: RESET_FONT,
+          value: { tag },
         });
         commit('updateHasAppliedFontFamily', false);
         commit('addDebugMessage', changeFontResponse);
@@ -106,5 +134,20 @@ export default {
         commit('addDebugMessage', e);
       }
     },
+
+    async toggleSelectedElement({ commit, dispatch, rootGetters }, { tag, isSelected }) {
+      console.log('toggle selected', tag, isSelected);
+      if (isSelected) {
+        // apply current font to tag
+        commit('addActiveTag', tag);
+        const { selectedFontData, fontVariationSettings } = rootGetters;
+        const { fontFamily } = selectedFontData;
+        dispatch('applyFontToContent', { fontFamily, fontVariationSettings });
+      } else {
+        // remove current font from tag
+        dispatch('unapplyFontFromContent', tag);
+        commit('removeActiveTag', tag);
+      }
+    }
   }
 };

@@ -38,16 +38,14 @@ export default new Vuex.Store({
   mutations: {
     updateFontFile(state, file) {
       Vue.set(state.fontFiles, file.name, file);
-      this.dispatch('loadFontData', file);
     },
     updateFontData(state, { fileName, data }) {
       Vue.set(state.fontData, fileName, data);
-      this.dispatch('loadFontFace', fileName);
     },
     updateFontDataAttr(state, { fileName, fieldName, fieldValue }) {
       Vue.set(state.fontData[fileName], fieldName, fieldValue);
     },
-    selectFont(state, fileName) {
+    updateSelectedFileName(state, fileName) {
       const { fontFiles } = state;
       if (fileName && fontFiles[fileName]) {
         state.selectedFileName = fileName;
@@ -75,7 +73,7 @@ export default new Vuex.Store({
     },
   },
   actions: {
-    async loadFontData({ commit }, file) {
+    async loadFontData({ commit, dispatch }, file) {
       const fontFileUrl = URL.createObjectURL(file);
       let opentypeData;
       try {
@@ -99,6 +97,7 @@ export default new Vuex.Store({
           variationAxes: getVariationAxes(opentypeData)
         }
       });
+      dispatch('loadFontFace', file.name);
     },
     async loadFontFace({ state, commit }, fileName) {
       const fontData = state.fontData[fileName];
@@ -121,6 +120,7 @@ export default new Vuex.Store({
       }
     },
     async applySelectedFontToContent({ rootState, state, getters, dispatch }) {
+      console.log('applying selected font');
       const { fontFiles, selectedFileName } = state;
       const { extension } = rootState;
       const { selectedFontData = {}, fontVariationSettings } = getters;
@@ -145,6 +145,11 @@ export default new Vuex.Store({
       commit('extension/updateHasAppliedFontVariationSettings', false);
       const { fontVariationSettings } = getters;
       dispatch('extension/applyFontVariationSettingsToContent', fontVariationSettings);
+    },
+    async selectFont({ commit, state, dispatch }) {
+      commit('updateSelectedFileName');
+      const { fontFiles, selectedFileName } = state;
+      await dispatch('loadFontData', fontFiles[selectedFileName]);
     },
     removeSelectedFont({ commit }) {
       commit('deselectFont');

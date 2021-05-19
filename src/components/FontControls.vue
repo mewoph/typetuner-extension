@@ -5,12 +5,7 @@
         {{selectedFileName}}
       </div>
       <div class="flex justify-between mt-2">
-        <button @click="applyFont" v-if="hasFontChanges"
-          class="toggle-button bg-purple-700 hover:bg-pink-700">
-          {{ localize('applyFontCta') }}
-        </button>
-
-        <button @click="unapplyFont" v-else
+        <button @click="unapplyFont"
           class="toggle-button bg-pink-700 hover:bg-purple-700">
           {{ localize('unapplyFontCta') }}
         </button>

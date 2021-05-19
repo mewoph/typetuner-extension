@@ -18,7 +18,7 @@
 </template>
 
 <script>
-import { mapMutations, mapState } from 'vuex';
+import { mapMutations, mapState, mapActions } from 'vuex';
 
 export default {
   data() {
@@ -57,16 +57,18 @@ export default {
     onChange() {
       this.handleFiles(this.$refs.fileInput.files);
     },
-    handleFiles(fileList) {
+    async handleFiles(fileList) {
       // TODO: File format validation
       for (let i = 0; i < fileList.length; i++) {
         this.updateFontFile(fileList[i]);
       }
       // Currently only one font is supported.
       // TODO: Update this logic when UI supports multiple fonts
-      this.selectFont();
+      await this.selectFont();
+      this.applySelectedFontToContent();
     },
-    ...mapMutations(['updateFontFile', 'selectFont', 'removeSelectedFont']),
+    ...mapMutations(['updateFontFile', 'removeSelectedFont']),
+    ...mapActions(['applySelectedFontToContent', 'selectFont']),
   },
 };
 </script>

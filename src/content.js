@@ -2,6 +2,7 @@ import {
   CHANGE_FONT_FAMILY,
   CHANGE_FONT_VARIATION_SETTINGS,
   LOAD_FONT,
+  RESET_FONT,
 } from './utils/actions';
 
 const getTimestamp = () => {
@@ -23,16 +24,49 @@ const loadFont = async (fontFamily, url) => {
   return { message: responseMsg };
 };
 
-const changeFontFamily = (fontFamily) => {
+const applyToTags = (tags, fn) => {
+  tags.forEach(tagName => {
+    document.querySelectorAll(tagName).forEach(el => fn(el));
+  });
+};
+
+const changeFontFamily = (fontFamily, tags) => {
   // TODO: Use CSS classes?
-  // TODO: Support setting font on elements other than body
-  document.body.style.fontFamily = fontFamily;
+  applyToTags(tags, el => {
+    if (!el.dataset.originalFontFamily) {
+      el.dataset.originalFontFamily = el.style.fontFamily;
+    }
+    el.style.fontFamily = fontFamily;
+  });
   return { message: `Set font-family: ${fontFamily} at ${getTimestamp()}`};
 };
 
-const changeFontVariationSettings = (fontVariationSettings) => {
-  document.body.style.fontVariationSettings = fontVariationSettings;
+const changeFontVariationSettings = (fontVariationSettings, tags) => {
+  applyToTags(tags, el => {
+    if (!el.dataset.originalFontVariationSettings) {
+      el.dataset.originalFontVariationSettings = el.fontVariationSettings;
+    }
+    el.style.fontVariationSettings = fontVariationSettings;
+  });
   return { message: `Set font-varation-settings: ${fontVariationSettings} at ${getTimestamp()}` };
+};
+
+const applyOriginalFont = (el) => {
+  const { dataset } = el;
+  const { originalFontFamily, originalFontVariationSettings } = dataset;
+  if (typeof originalFontFamily === 'string') {
+    el.style.fontFamily = originalFontFamily;
+  }
+  if (typeof originalFontVariationSettings === 'string') {
+    el.style.fontVariationSettings = originalFontVariationSettings;
+  }
+};
+
+const restoreOriginalStyle = (tag) => {
+  const selector = tag ? tag : '[data-original-font-family], [data-original-font-variation-settings]';
+  const nodes = document.querySelectorAll(selector);
+  nodes.forEach(node => applyOriginalFont(node));
+  return { message: `Restore original font at ${getTimestamp()}` };
 };
 
 browser.runtime.onMessage.addListener(async (request) => {
@@ -44,16 +78,20 @@ browser.runtime.onMessage.addListener(async (request) => {
   let response;
 
   if (action === CHANGE_FONT_FAMILY) {
-    const { fontFamily } = value;
-    response = changeFontFamily(fontFamily);
+    const { fontFamily, tags } = value;
+    response = changeFontFamily(fontFamily, tags);
   
   } else if (action === CHANGE_FONT_VARIATION_SETTINGS) {
-    const { fontVariationSettings } = value;
-    response = changeFontVariationSettings(fontVariationSettings);
+    const { fontVariationSettings, tags } = value;
+    response = changeFontVariationSettings(fontVariationSettings, tags);
 
   } else if (action === LOAD_FONT) {
     const { fontFamily, url } = value;
     response = await loadFont(fontFamily, url);
+
+  } else if (action === RESET_FONT) {
+    const { tag } = value;
+    return restoreOriginalStyle(tag);
   }
 
   return response;
