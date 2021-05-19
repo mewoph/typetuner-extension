@@ -21,6 +21,7 @@ export default new Vuex.Store({
     fontFiles: {},
     fontData: {},
     selectedFontVariation: {},
+    errorMessage: null,
   },
   getters: {
     selectedFontData: state => {
@@ -66,6 +67,12 @@ export default new Vuex.Store({
     updateHasLoadedSelectedFont(state, hasLoadedSelectedFont) {
       state.hasLoadedSelectedFont = hasLoadedSelectedFont;
     },
+    updateErrorMessage(state, errorMessage) {
+      state.errorMessage = errorMessage;
+    },
+    removeFontFile(state, fileName) {
+      Vue.delete(state.fontFiles, fileName);
+    },
   },
   actions: {
     async loadFontData({ commit }, file) {
@@ -73,8 +80,11 @@ export default new Vuex.Store({
       let opentypeData;
       try {
         opentypeData = await opentype.load(fontFileUrl);
+        commit('updateErrorMessage', '');
       } catch(e) {
         console.error(e);
+        commit('updateErrorMessage', e.message);
+        commit('removeFontFile', file.name);
       }
       if (!opentypeData) {
         return;

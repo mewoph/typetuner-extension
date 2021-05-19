@@ -11,6 +11,7 @@
         <label for="file-input" class="absolute inset-0 flex items-center justify-center text-center text-2xl font-black">
           {{ localize('dropAreaLabel') }}
         </label>
+        <p v-if="errorMessage" class="p-5 absolute bottom-0 text-red-500">{{errorMessage}}</p>
       </div>
     </div>
   </div>
@@ -26,7 +27,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(['selectedFileName']),
+    ...mapState(['selectedFileName', 'errorMessage']),
   },
 
   methods: {
