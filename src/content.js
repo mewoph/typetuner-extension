@@ -33,7 +33,7 @@ const applyToTags = (tags, fn) => {
 const changeFontFamily = (fontFamily, tags) => {
   // TODO: Use CSS classes?
   applyToTags(tags, el => {
-    if (!el.dataset.originalFontFamily) {
+    if (typeof el.dataset.originalFontFamily !== 'string') {
       el.dataset.originalFontFamily = el.style.fontFamily;
     }
     el.style.fontFamily = fontFamily;
@@ -43,8 +43,8 @@ const changeFontFamily = (fontFamily, tags) => {
 
 const changeFontVariationSettings = (fontVariationSettings, tags) => {
   applyToTags(tags, el => {
-    if (!el.dataset.originalFontVariationSettings) {
-      el.dataset.originalFontVariationSettings = el.fontVariationSettings;
+    if (typeof el.dataset.originalFontVariationSettings !== 'string') {
+      el.dataset.originalFontVariationSettings = el.style.fontVariationSettings;
     }
     el.style.fontVariationSettings = fontVariationSettings;
   });

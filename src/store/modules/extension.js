@@ -14,7 +14,6 @@ export default {
     isDebugMode: process.env.NODE_ENV === 'development',
     debugMessages: [],
     originalFontConfig: null,
-    hasAppliedFontFamily: false,
     hasLoadedFont: false,
     tagOptions: {
       html: false,
@@ -24,9 +23,6 @@ export default {
     },
   },
   getters: {
-    hasFontChanges: state => {
-      return !state.hasAppliedFontFamily;
-    },
     latestDebugMessage: state => {
       const { debugMessages } = state;
       return debugMessages[debugMessages.length - 1];
@@ -47,9 +43,6 @@ export default {
     },
     addDebugMessage(state, { message }) {
       state.debugMessages.push(message);
-    },
-    updateHasAppliedFontFamily(state, hasAppliedFontFamily) {
-      state.hasAppliedFontFamily = hasAppliedFontFamily;
     },
     updateHasLoadedFont(state, hasLoadedFont) {
       state.hasLoadedFont = hasLoadedFont;
@@ -95,24 +88,19 @@ export default {
     },
 
     async applyFontFamilyToContent({ commit, getters }, fontFamily) {
-      console.log('active', getters.activeTagNames);
       try {
         const changeFontResponse = await sendMessageToActiveTab({
           action: CHANGE_FONT_FAMILY,
           value: { fontFamily, tags: getters.activeTagNames }
         });
-        commit('updateHasAppliedFontFamily', true);
         commit('addDebugMessage', changeFontResponse);
       } catch(e) {
         commit('addDebugMessage', e);
       }
     },
 
-    async applyFontToContent({ state, dispatch }, { fontFamily, fontVariationSettings }) {
-      const { hasAppliedFontFamily } = state;
-      if (!hasAppliedFontFamily) {
-        dispatch('applyFontFamilyToContent', fontFamily);
-      }
+    async applyFontToContent({ dispatch }, { fontFamily, fontVariationSettings }) {
+      dispatch('applyFontFamilyToContent', fontFamily);
       if (fontVariationSettings) {
         dispatch('applyFontVariationSettingsToContent', fontVariationSettings);
       }
@@ -128,7 +116,6 @@ export default {
           action: RESET_FONT,
           value: { tag },
         });
-        commit('updateHasAppliedFontFamily', false);
         commit('addDebugMessage', changeFontResponse);
       } catch(e) {
         commit('addDebugMessage', e);
@@ -136,7 +123,6 @@ export default {
     },
 
     async toggleSelectedElement({ commit, dispatch, rootGetters }, { tag, isSelected }) {
-      console.log('toggle selected', tag, isSelected);
       if (isSelected) {
         // apply current font to tag
         commit('addActiveTag', tag);

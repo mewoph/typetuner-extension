@@ -120,7 +120,6 @@ export default new Vuex.Store({
       }
     },
     async applySelectedFontToContent({ rootState, state, getters, dispatch }) {
-      console.log('applying selected font');
       const { fontFiles, selectedFileName } = state;
       const { extension } = rootState;
       const { selectedFontData = {}, fontVariationSettings } = getters;
@@ -136,15 +135,9 @@ export default new Vuex.Store({
         fontVariationSettings
       });
     },
-    async updateFontVariation({ rootState, dispatch, getters, commit }, variation) {
-      const { extension } = rootState;
-      if (!extension.hasAppliedFontFamily) {
-        await dispatch('applySelectedFontToContent');
-      }
+    updateFontVariation({ dispatch, commit }, variation) {
       commit('updateSelectedFontVariation', variation);
-      commit('extension/updateHasAppliedFontVariationSettings', false);
-      const { fontVariationSettings } = getters;
-      dispatch('extension/applyFontVariationSettingsToContent', fontVariationSettings);
+      dispatch('applySelectedFontToContent');
     },
     async selectFont({ commit, state, dispatch }) {
       commit('updateSelectedFileName');
@@ -153,7 +146,6 @@ export default new Vuex.Store({
     },
     removeSelectedFont({ commit }) {
       commit('deselectFont');
-      commit('extension/updateHasAppliedFontFamily', false);
       commit('extension/updateHasLoadedFont', false);
     }
   },
