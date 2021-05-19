@@ -10,7 +10,7 @@
           v-model="axisValue"
           :min="axisData.minValue"
           :max="axisData.maxValue"
-          @change="onChange" />
+          @input="onInput" />
         <div class="w-12">{{ axisData.maxValue}}</div>
       </div>
   </div>
@@ -35,7 +35,7 @@ export default {
     };
   },
   methods: {
-    onChange() {
+    onInput() {
       const { axisData, axisValue: value } = this;
       this.updateFontVariation({ tag: axisData.tag, value });
     },
