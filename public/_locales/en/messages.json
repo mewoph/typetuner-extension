@@ -48,5 +48,9 @@
   "pageSettingsLabel": {
     "message": "Page Settings",
     "description": "Label for button that shows/hides page settings"
+  },
+  "maxLineLengthLabel": {
+    "message": "Maximum line length",
+    "description": "Label for max width input"
   }
 }
