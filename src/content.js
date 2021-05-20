@@ -38,7 +38,7 @@ const changeFontFamily = (fontFamily, tags) => {
     }
     el.style.fontFamily = fontFamily;
   });
-  return { message: `Set font-family: ${fontFamily} at ${getTimestamp()}`};
+  return { message: `Set font-family: ${fontFamily} for ${tags} at ${getTimestamp()}`};
 };
 
 const changeFontVariationSettings = (fontVariationSettings, tags) => {
@@ -66,7 +66,7 @@ const restoreOriginalStyle = (tag) => {
   const selector = tag ? tag : '[data-original-font-family], [data-original-font-variation-settings]';
   const nodes = document.querySelectorAll(selector);
   nodes.forEach(node => applyOriginalFont(node));
-  return { message: `Restore original font at ${getTimestamp()}` };
+  return { message: `Restore original font for ${tag} at ${getTimestamp()}` };
 };
 
 browser.runtime.onMessage.addListener(async (request) => {

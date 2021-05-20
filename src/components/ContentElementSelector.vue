@@ -1,9 +1,9 @@
 <template>
-  <button class="rounded p-2 text-white cursor-pointer"
+  <button class="rounded p-2 text-white cursor-pointer focus:outline-none focus:ring-2"
     :class="[
       elementData.isSelected ?
-      'bg-indigo-700 hover:bg-gray-400' :
-      'bg-gray-400 hover:bg-indigo-700'
+      'bg-indigo-700 hover:bg-indigo-500' :
+      'bg-gray-400 hover:bg-indigo-500'
     ]"
     @click="$emit('click')"
   >
