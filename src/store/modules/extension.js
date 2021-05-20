@@ -3,6 +3,9 @@ import {
   CHANGE_FONT_FAMILY,
   CHANGE_FONT_VARIATION_SETTINGS,
   RESET_FONT,
+  TOGGLE_INVERT,
+  TOGGLE_JUSTIFICATION,
+  UPDATE_MAX_WIDTH,
   sendMessageToActiveTab
 } from '@/utils/actions';
 
@@ -133,15 +136,48 @@ export default {
 
     async toggleSelectedElement({ commit, dispatch, rootGetters }, { tag, isSelected }) {
       if (isSelected) {
-        // apply current font to tag
         commit('addActiveTag', tag);
         const { selectedFontData, fontVariationSettings } = rootGetters;
-        const { fontFamily } = selectedFontData;
-        dispatch('applyFontToContent', { fontFamily, fontVariationSettings });
+        const { fontFamily } = selectedFontData || {};
+        if (fontFamily || fontVariationSettings) {
+          dispatch('applyFontToContent', { fontFamily, fontVariationSettings });
+        }
       } else {
-        // remove current font from tag
         dispatch('unapplyFontFromContent', tag);
         commit('removeActiveTag', tag);
+      }
+    },
+    async toggleInvert({ commit }, isInverted) {
+      try {
+        const response = await sendMessageToActiveTab({
+          action: TOGGLE_INVERT,
+          value: { isInverted },
+        });
+        commit('addDebugMessage', response);
+      } catch (e) {
+        commit('addDebugMessage', e);
+      }
+    },
+    async toggleJustification({ commit, getters }, isJustified) {
+      try {
+        const response = await sendMessageToActiveTab({
+          action: TOGGLE_JUSTIFICATION,
+          value: { isJustified, tags: getters.activeTagNames },
+        });
+        commit('addDebugMessage', response);
+      } catch (e) {
+        commit('addDebugMessage', e);
+      }
+    },
+    async updateMaxWidth({ commit, getters }, maxWidth) {
+      try {
+        const response = await sendMessageToActiveTab({
+          action: UPDATE_MAX_WIDTH,
+          value: { maxWidth, tags: getters.activeTagNames },
+        });
+        commit('addDebugMessage', response);
+      } catch (e) {
+        commit('addDebugMessage', e);
       }
     }
   }

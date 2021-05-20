@@ -51,3 +51,25 @@ export const restoreOriginalStyle = (tag) => {
   nodes.forEach(node => applyOriginalFont(node));
   return { message: `Restore original font for ${tag} at ${getTimestamp()}` };
 };
+
+export const toggleInvert = (isInverted) => {
+  const filterValue = isInverted ? 'invert(1)' : '';
+  document.documentElement.style.filter = filterValue;
+  // Un-invert images, TODO: background images?
+  applyToTags(['img'], el => el.style.filter = filterValue);
+  return { message: `Toggle invert to ${isInverted} at ${getTimestamp()}`};
+};
+
+export const toggleJustification = (isJustified, tags) => {
+  applyToTags(tags, el => {
+    el.style.textAlign = isJustified ? 'justify' : '';
+  });
+  return { message: `Toggle justification to ${isJustified} at ${getTimestamp()}`};
+};
+
+export const updateMaxWidth = (maxWidth, tags) => {
+  applyToTags(tags, el => {
+    el.style.maxWidth = `${maxWidth}px`;
+  });
+  return { message: `Set max-width: ${maxWidth} for ${tags} at ${getTimestamp()}`};
+};

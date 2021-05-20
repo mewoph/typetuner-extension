@@ -7,7 +7,7 @@
             class="w-full shadow"
             :min="axisData.minValue"
             :max="axisData.maxValue"
-            :value="axisValue" @change="onChange" />
+            v-model="axisValue" />
         </div>
         <div class="w-12 text-right">{{ axisData.minValue }}</div>
         <input
@@ -15,15 +15,14 @@
           class="w-full"
           v-model="axisValue"
           :min="axisData.minValue"
-          :max="axisData.maxValue"
-          @input="onInput" />
+          :max="axisData.maxValue" />
         <div class="w-12">{{ axisData.maxValue}}</div>
       </div>
   </div>
 </template>
 
 <script>
-import { mapActions } from 'vuex';
+import { mapState, mapActions } from 'vuex';
 
 export default {
   props: {
@@ -35,20 +34,21 @@ export default {
       },
     },
   },
-  data() {
-    return {
-      axisValue: this.axisData.defaultValue
-    };
+  computed: {
+    axisValue: {
+      get() {
+        const { selectedFontVariation, axisData } = this;
+        const { defaultValue, tag } = axisData;
+        return selectedFontVariation[tag] || defaultValue;
+      },
+      set(newValue) {
+        const { axisData } = this;
+        this.updateFontVariation({ tag: axisData.tag, value: newValue });
+      },
+    },
+    ...mapState(['selectedFontVariation']),
   },
   methods: {
-    onChange(e) {
-      this.axisValue = e.target.value;
-      this.onInput();
-    },
-    onInput() {
-      const { axisData, axisValue: value } = this;
-      this.updateFontVariation({ tag: axisData.tag, value });
-    },
     ...mapActions(['updateFontVariation']),
   },
 }

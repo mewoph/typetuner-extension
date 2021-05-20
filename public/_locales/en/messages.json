@@ -32,5 +32,9 @@
   "differentFontCta": {
     "message": "Use a different font",
     "description": "Call to action to show file drop area"
+  },
+  "invertLabel": {
+    "message": "Invert page colors",
+    "description": "Label for checkbox control whether page colors are inverted"
   }
 }

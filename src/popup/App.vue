@@ -8,9 +8,14 @@
     <FontControls v-else />
 
     <FontPreview v-if="canPreviewFont" :font-family="fontFamily" />
-    <ContentElements v-if="selectedFontData" />
 
-    <FontVariationAxes v-if="variationAxes.length" :axes="variationAxes" />
+    <div>
+      <TabMenu @tab-change="onTabChange" :tabs="tabs" :current-tab="currentTab"/>
+      <ContentElements />
+    </div>
+
+    <FontVariationAxes v-if="shouldShowFontControls" :axes="variationAxes" />
+    <ContentControls v-if="shouldShowPageControls" />
   </div>
 </template>
 
@@ -20,16 +25,34 @@ import FontControls from '@/components/FontControls';
 import FontPreview from '@/components/FontPreview';
 import FontVariationAxes from '@/components/FontVariationAxes';
 import ContentElements from '@/components/ContentElements';
+import ContentControls from '@/components/ContentControls';
+import TabMenu from '@/components/TabMenu';
 
 import { mapState, mapGetters } from 'vuex';
 
 export default {
+  data() {
+    return {
+      currentTab: 'page',
+    };
+  },
   components: {
     FontDrop,
     FontControls,
     FontPreview,
     FontVariationAxes,
     ContentElements,
+    ContentControls,
+    TabMenu,
+  },
+
+  created() {
+    this.unwatchCanPreviewFont = this.$watch('canPreviewFont', (canPreviewFont) => {
+      if (canPreviewFont) {
+        this.currentTab = 'font';
+        this.unwatchCanPreviewFont();
+      }
+    })
   },
 
   computed: {
@@ -48,9 +71,33 @@ export default {
       }
       return [];
     },
+    shouldShowFontControls() {
+      return this.currentTab === 'font' && this.variationAxes.length;
+    },
+    shouldShowPageControls() {
+      return this.currentTab === 'page';
+    },
+    tabs() {
+      const { selectedFontData } = this;
+      const fontTab = {
+        displayName: this.localize('fontSettingsLabel'),
+        id: 'font',
+      };
+      const pageTab = {
+        displayName: this.localize('pageSettingsLabel'),
+        id: 'page',
+      };
+      return selectedFontData ? [fontTab, pageTab] : [pageTab];
+    },
     ...mapGetters(['selectedFontData']),
     ...mapGetters('extension', ['latestDebugMessage']),
     ...mapState('extension', ['isDebugMode']),
+  },
+
+  methods: {
+    onTabChange(newTab) {
+      this.currentTab = newTab;
+    },
   },
 };
 </script>

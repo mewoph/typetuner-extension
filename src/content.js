@@ -3,6 +3,9 @@ import {
   CHANGE_FONT_VARIATION_SETTINGS,
   LOAD_FONT,
   RESET_FONT,
+  TOGGLE_INVERT,
+  TOGGLE_JUSTIFICATION,
+  UPDATE_MAX_WIDTH,
 } from './utils/actions';
 
 import {
@@ -10,6 +13,9 @@ import {
   changeFontVariationSettings,
   loadFont,
   restoreOriginalStyle,
+  toggleInvert,
+  toggleJustification,
+  updateMaxWidth,
 } from './utils/dom';
 
 browser.runtime.onMessage.addListener(async (request) => {
@@ -17,6 +23,7 @@ browser.runtime.onMessage.addListener(async (request) => {
   if (!message) {
     return;
   }
+
   const { action, value } = message;
   let response;
 
@@ -35,6 +42,17 @@ browser.runtime.onMessage.addListener(async (request) => {
   } else if (action === RESET_FONT) {
     const { tag } = value;
     return restoreOriginalStyle(tag);
+
+  } else if (action === TOGGLE_INVERT) {
+    return toggleInvert(value.isInverted);
+
+  } else if (action === TOGGLE_JUSTIFICATION) {
+    const { isJustified, tags } = value;
+    return toggleJustification(isJustified, tags);
+
+  } else if (action === UPDATE_MAX_WIDTH) {
+    const { maxWidth, tags } = value;
+    return updateMaxWidth(maxWidth, tags);
   }
 
   return response;
