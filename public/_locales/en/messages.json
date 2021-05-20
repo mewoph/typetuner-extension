@@ -35,6 +35,18 @@
   },
   "invertLabel": {
     "message": "Invert page colors",
-    "description": "Label for checkbox control whether page colors are inverted"
+    "description": "Label for checkbox controling whether page colors are inverted"
+  },
+  "justifyLabel": {
+    "message": "Justify text",
+    "description": "Label for checkbox controlling whether text is justified"
+  },
+  "fontSettingsLabel": {
+    "message": "Font Settings",
+    "description": "Label for button that shows/hides font settings"
+  },
+  "pageSettingsLabel": {
+    "message": "Page Settings",
+    "description": "Label for button that shows/hides page settings"
   }
 }

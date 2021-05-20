@@ -2,7 +2,7 @@
   <div class="font-variation-axis flex w-full mt-2 space-x-4">
       <div>{{ axisData.tag }}</div>
       <div class="flex w-full space-x-2">
-        <div class="w-16">
+        <div class="w-20">
           <input type="number"
             class="w-full shadow"
             :min="axisData.minValue"
