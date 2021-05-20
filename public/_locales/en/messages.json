@@ -21,16 +21,12 @@
     "message": "Drop font file here",
     "description": "Label of the file drop area"
   },
-  "applyFontCta": {
-    "message": "Apply font",
-    "description": "Call to action for applying font selection to content page"
-  },
   "unapplyFontCta": {
-    "message": "Un-apply font",
+    "message": "Reset",
     "description": "Call to action for applying original content page's font selection"
   },
   "differentFontCta": {
-    "message": "Use a different font",
+    "message": "Try a different font",
     "description": "Call to action to show file drop area"
   },
   "invertLabel": {
