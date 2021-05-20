@@ -33,8 +33,8 @@ const applyToTags = (tags, fn) => {
 const changeFontFamily = (fontFamily, tags) => {
   // TODO: Use CSS classes?
   applyToTags(tags, el => {
-    if (typeof el.dataset.originalFontFamily !== 'string') {
-      el.dataset.originalFontFamily = el.style.fontFamily;
+    if (!el.dataset.fontOverrides) {
+      el.dataset.fontOverrides = true;
     }
     el.style.fontFamily = fontFamily;
   });
@@ -43,27 +43,18 @@ const changeFontFamily = (fontFamily, tags) => {
 
 const changeFontVariationSettings = (fontVariationSettings, tags) => {
   applyToTags(tags, el => {
-    if (typeof el.dataset.originalFontVariationSettings !== 'string') {
-      el.dataset.originalFontVariationSettings = el.style.fontVariationSettings;
-    }
     el.style.fontVariationSettings = fontVariationSettings;
   });
   return { message: `Set font-varation-settings: ${fontVariationSettings} at ${getTimestamp()}` };
 };
 
 const applyOriginalFont = (el) => {
-  const { dataset } = el;
-  const { originalFontFamily, originalFontVariationSettings } = dataset;
-  if (typeof originalFontFamily === 'string') {
-    el.style.fontFamily = originalFontFamily;
-  }
-  if (typeof originalFontVariationSettings === 'string') {
-    el.style.fontVariationSettings = originalFontVariationSettings;
-  }
+  el.style.fontFamily = '';
+  el.style.fontVariationSettings = '';
 };
 
 const restoreOriginalStyle = (tag) => {
-  const selector = tag ? tag : '[data-original-font-family], [data-original-font-variation-settings]';
+  const selector = tag ? tag : '[data-font-overrides]';
   const nodes = document.querySelectorAll(selector);
   nodes.forEach(node => applyOriginalFont(node));
   return { message: `Restore original font for ${tag} at ${getTimestamp()}` };
