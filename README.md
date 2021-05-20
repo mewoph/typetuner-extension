@@ -1,4 +1,4 @@
-# font-calibrate
+# TypeTuner
 
 Web extension for previewing local web font in context
 
