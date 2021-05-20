@@ -33,6 +33,9 @@ export default {
       a: false,
       main: false,
     },
+    maxWidth: null,
+    isInverted: false,
+    isJustified: false,
   },
   getters: {
     latestDebugMessage: state => {
@@ -71,6 +74,15 @@ export default {
         tagOptions[key] = false;
       }
       state.tagOptions = tagOptions;
+    },
+    updateIsInverted(state, isInverted) {
+      state.isInverted = isInverted;
+    },
+    updateIsJustified(state, isJustified) {
+      state.isJustified = isJustified;
+    },
+    updateMaxWidthState(state, maxWidth) {
+      state.maxWidth = maxWidth;
     },
   },
   actions: {
@@ -134,14 +146,26 @@ export default {
       }
     },
 
-    async toggleSelectedElement({ commit, dispatch, rootGetters }, { tag, isSelected }) {
+    async toggleSelectedElement({ state, commit, dispatch, rootGetters }, { tag, isSelected }) {
       if (isSelected) {
+        console.log('selected', tag, state.isJustified);
         commit('addActiveTag', tag);
         const { selectedFontData, fontVariationSettings } = rootGetters;
         const { fontFamily } = selectedFontData || {};
         if (fontFamily || fontVariationSettings) {
           dispatch('applyFontToContent', { fontFamily, fontVariationSettings });
         }
+
+        // Apply page settings to newly selected elements
+        const { isJustified, maxWidth } = state;
+        if (isJustified) {
+          dispatch('toggleJustification', true);
+        }
+
+        if (maxWidth) {
+          dispatch('updateMaxWidth', maxWidth);
+        }
+
       } else {
         dispatch('unapplyFontFromContent', tag);
         commit('removeActiveTag', tag);
@@ -154,6 +178,7 @@ export default {
           value: { isInverted },
         });
         commit('addDebugMessage', response);
+        commit('updateIsInverted', isInverted);
       } catch (e) {
         commit('addDebugMessage', e);
       }
@@ -165,6 +190,7 @@ export default {
           value: { isJustified, tags: getters.activeTagNames },
         });
         commit('addDebugMessage', response);
+        commit('updateIsJustified', isJustified);
       } catch (e) {
         commit('addDebugMessage', e);
       }
@@ -176,6 +202,7 @@ export default {
           value: { maxWidth, tags: getters.activeTagNames },
         });
         commit('addDebugMessage', response);
+        commit('updateMaxWidthState', maxWidth);
       } catch (e) {
         commit('addDebugMessage', e);
       }

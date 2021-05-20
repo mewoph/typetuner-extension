@@ -5,25 +5,27 @@
       id="max-width-input"
       type="range"
       class="w-full"
-      v-model="maxWidth"
+      v-model="maxWidthValue"
       :min="100"
-      :max="1400"
-      @input="onInput" />
+      :max="1400" />
   </div>
 </template>
 
 <script>
-import { mapActions } from 'vuex';
+import { mapState, mapActions } from 'vuex';
 export default {
-  data() {
-    return {
-      maxWidth: null
-    };
+  computed: {
+    maxWidthValue: {
+      get() {
+        return this.maxWidth;
+      },
+      set(newValue) {
+        this.updateMaxWidth(newValue);
+      },
+    },
+    ...mapState('extension', ['maxWidth']),
   },
   methods: {
-    onInput() {
-      this.updateMaxWidth(this.maxWidth);
-    },
     ...mapActions('extension', ['updateMaxWidth']),
   },
 }

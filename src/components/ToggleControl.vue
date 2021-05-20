@@ -18,10 +18,14 @@ export default {
       default: '',
       required: true,
     },
+    defaultValue: {
+      type: Boolean,
+      default: false,
+    },
   },
   data() {
     return {
-      toggleValue: false,
+      toggleValue: this.defaultValue,
     };
   },
   methods: {
