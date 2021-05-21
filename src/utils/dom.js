@@ -54,6 +54,10 @@ export const restoreOriginalStyle = (tag) => {
 
 export const toggleInvert = (isInverted) => {
   const filterValue = isInverted ? 'invert(1)' : '';
+  // If page doesn't have a background color set, invert won't work.
+  if (getComputedStyle(document.documentElement).backgroundColor === 'rgba(0, 0, 0, 0)') {
+    document.documentElement.style.background = 'white';
+  }
   document.documentElement.style.filter = filterValue;
   // Un-invert images, TODO: background images?
   applyToTags(['img'], el => el.style.filter = filterValue);

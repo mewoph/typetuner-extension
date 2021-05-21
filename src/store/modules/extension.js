@@ -18,6 +18,8 @@ export default {
     debugMessages: [],
     originalFontConfig: null,
     hasLoadedFont: false,
+    // TODO: Maybe this can be dynamic based on which tags
+    // on the page have font declarations
     tagOptions: {
       body: true,
       p: false,
