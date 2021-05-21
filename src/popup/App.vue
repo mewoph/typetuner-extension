@@ -46,15 +46,6 @@ export default {
     TabMenu,
   },
 
-  created() {
-    this.unwatchCanPreviewFont = this.$watch('canPreviewFont', (canPreviewFont) => {
-      if (canPreviewFont) {
-        this.currentTab = 'font';
-        this.unwatchCanPreviewFont();
-      }
-    })
-  },
-
   computed: {
     canPreviewFont() {
       const { selectedFontData = {} } = this;
@@ -92,6 +83,16 @@ export default {
     ...mapGetters(['selectedFontData']),
     ...mapGetters('extension', ['latestDebugMessage']),
     ...mapState('extension', ['isDebugMode']),
+  },
+
+  watch: {
+    canPreviewFont(newVal) {
+      if (newVal) {
+        this.currentTab = 'font';
+      } else {
+        this.currentTab = 'page';
+      }
+    },
   },
 
   methods: {

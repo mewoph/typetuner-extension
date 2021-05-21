@@ -6,7 +6,8 @@ import {
   getDataUrl,
   getFontFamily,
   getVariationAxes,
-  formatFontVariationSettings
+  formatFontVariationSettings,
+  getDefaultAxisValues,
 } from '@/utils/font';
 import opentype from 'opentype.js';
 
@@ -71,6 +72,9 @@ export default new Vuex.Store({
     removeFontFile(state, fileName) {
       Vue.delete(state.fontFiles, fileName);
     },
+    setDefaultFontVariation(state, fontVariationSettings) {
+      state.selectedFontVariation = fontVariationSettings;
+    },
   },
   actions: {
     async loadFontData({ commit, dispatch }, file) {
@@ -89,14 +93,16 @@ export default new Vuex.Store({
       }
 
       // TODO: Handle locale for font family name
+      const variationAxes = getVariationAxes(opentypeData);
       commit('updateFontData', {
         fileName: file.name,
         data: {
           fontFamily: getFontFamily(opentypeData),
           url: fontFileUrl,
-          variationAxes: getVariationAxes(opentypeData)
+          variationAxes
         }
       });
+      commit('setDefaultFontVariation', getDefaultAxisValues(variationAxes));
       dispatch('loadFontFace', file.name);
     },
     async loadFontFace({ state, commit }, fileName) {

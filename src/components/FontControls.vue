@@ -4,14 +4,14 @@
       <div class="font-bold text-base truncate">
         {{selectedFileName}}
       </div>
-      <div class="flex justify-between mt-2">
+      <div class="flex justify-between mt-2 items-end">
         <button @click="unapplyFont"
-          class="toggle-button bg-pink-700 hover:bg-purple-700">
+          class="toggle-button bg-pink-700 hover:bg-purple-800">
           {{ localize('unapplyFontCta') }}
         </button>
 
         <button @click="removeFile"
-          class="text-purple-800 hover:text-pink-700 focus:outline-none">
+          class="text-purple-800 hover:text-pink-700 focus:outline-none border border-current px-1">
           {{ localize('differentFontCta') }}
         </button>
       </div>

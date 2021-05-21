@@ -31,3 +31,14 @@ export const formatFontVariationSettings = (settings) => {
   });
   return str;
 };
+
+export const getDefaultAxisValues = (axes) => {
+  if (axes.length === 0) {
+    return {};
+  }
+  const settings = {};
+  axes.forEach(axis => {
+    settings[axis.tag] = axis.defaultValue;
+  });
+  return settings;
+};

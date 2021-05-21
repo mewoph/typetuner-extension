@@ -1,9 +1,9 @@
 <template>
-  <div class="border-b border-gray-700 my-3">
+  <div class="border-b border-purple-800 my-3">
     <button v-for="tab in tabs" :key="tab.id" @click="$emit('tab-change', tab.id)"
-      class="border-gray-700 py-1 px-3 focus:outline-none"
+      class="py-1 px-3 focus:outline-none"
       :class="[
-       currentTab === tab.id ? 'border-t border-r border-l' : ''
+       currentTab === tab.id ? ' bg-purple-800 text-white' : 'text-purple-800'
       ]">
       {{ tab.displayName }}
     </button>

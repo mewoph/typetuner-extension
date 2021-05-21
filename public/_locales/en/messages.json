@@ -8,7 +8,7 @@
     "description": "Text to preview the dropped font"
   },
   "previewLabel": {
-    "message": "Previewing $font$",
+    "message": "Viewing $font$",
     "description": "Label of the preview text box",
     "placeholders": {
       "font": {
@@ -16,6 +16,14 @@
         "example": "Helvetica"
       }
     }
+  },
+  "inspectCta": {
+    "message": "Inspect",
+    "description": "Label of button to show font variation settings"
+  },
+  "previewCta": {
+    "message": "Preview",
+    "description": "Label of button to show font preview"
   },
   "dropAreaLabel": {
     "message": "Drop font file here",
