@@ -33,7 +33,7 @@ export const changeFontFamily = (fontFamily, tags) => {
     if (!el.dataset.fontOverrides) {
       el.dataset.fontOverrides = true;
     }
-    el.style.fontFamily = fontFamily;
+    el.style.fontFamily = `'${fontFamily}'`;
   });
   return { message: `Set font-family: ${fontFamily} for ${tags} at ${getTimestamp()}`};
 };

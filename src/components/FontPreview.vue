@@ -44,7 +44,7 @@ export default {
     fontStyle() {
       const { fontFamily, fontVariationSettings } = this;
       const style = {
-        fontFamily: fontFamily
+        fontFamily: `'${fontFamily}'`,
       };
       if (fontVariationSettings) {
         style.fontVariationSettings = fontVariationSettings;
