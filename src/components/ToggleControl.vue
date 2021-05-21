@@ -1,6 +1,6 @@
 <template>
   <div class="flex items-center gap-x-2">
-    <input type="checkbox" :id="id" v-model="toggleValue" @change="onChange"/>
+    <input type="checkbox" :id="id" v-model="toggleValue" />
     <label :for="id">{{ labelText }}</label>
   </div>
 </template>
@@ -18,19 +18,19 @@ export default {
       default: '',
       required: true,
     },
-    defaultValue: {
-      type: Boolean,
-      default: false,
+    modelName: {
+      type: String,
+      default: '',
     },
   },
-  data() {
-    return {
-      toggleValue: this.defaultValue,
-    };
-  },
-  methods: {
-    onChange() {
-      this.$emit('toggle', this.toggleValue);
+  computed: {
+    toggleValue: {
+      get() {
+        return this.$store.state.extension[this.modelName];
+      },
+      set(newValue) {
+        this.$emit('toggle', newValue);
+      },
     },
   },
 };

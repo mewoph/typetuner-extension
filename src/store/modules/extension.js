@@ -132,12 +132,14 @@ export default {
       }
     },
 
-    async unapplyFontFromContent({ commit }, tag) {
+    async unapplyFontFromContent({ commit, dispatch }, tag) {
       if (!tag) {
         commit('deselectAllTags');
       }
 
       try {
+        dispatch('resetPageSettings');
+
         const changeFontResponse = await sendMessageToActiveTab({
           action: RESET_FONT,
           value: { tag },
@@ -150,7 +152,6 @@ export default {
 
     async toggleSelectedElement({ state, commit, dispatch, rootGetters }, { tag, isSelected }) {
       if (isSelected) {
-        console.log('selected', tag, state.isJustified);
         commit('addActiveTag', tag);
         const { selectedFontData, fontVariationSettings } = rootGetters;
         const { fontFamily } = selectedFontData || {};
@@ -208,6 +209,11 @@ export default {
       } catch (e) {
         commit('addDebugMessage', e);
       }
-    }
+    },
+    resetPageSettings({ dispatch }) {
+      dispatch('toggleJustification', false);
+      dispatch('toggleInvert', false);
+      dispatch('updateMaxWidth', null);
+    },
   }
 };

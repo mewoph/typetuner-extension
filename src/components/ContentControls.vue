@@ -3,12 +3,12 @@
     <LineLengthControl />
     <ToggleControl
       :label-text="localize('invertLabel')"
-      :default-value="isInverted"
+      model-name="isInverted"
       @toggle="toggleInvert"
       id="invert-input" />
     <ToggleControl
       :label-text="localize('justifyLabel')"
-      :default-value="isJustified"
+      model-name="isJustified"
       @toggle="toggleJustification"
       id="justification-input" />
   </div>
@@ -17,15 +17,12 @@
 <script>
 import LineLengthControl from '@/components/LineLengthControl';
 import ToggleControl from '@/components/ToggleControl';
-import { mapState, mapActions } from 'vuex';
+import { mapActions } from 'vuex';
 
 export default {
   components: {
     LineLengthControl,
     ToggleControl,
-  },
-  computed: {
-    ...mapState('extension', ['isInverted', 'isJustified']),
   },
   methods: {
     ...mapActions('extension', ['toggleInvert', 'toggleJustification']),
