@@ -1,5 +1,5 @@
 <template>
-  <button class="rounded p-2 text-white cursor-pointer focus:outline-none focus:ring-2"
+  <button class="rounded p-2 text-white cursor-pointer focus:outline-none focus:ring-2 mr-1 mb-1"
     :class="[
       elementData.isSelected ?
       'bg-indigo-700 hover:bg-indigo-800' :

@@ -1,7 +1,7 @@
 <template>
   <div class="flex items-center gap-x-2">
     <input type="checkbox" :id="id" v-model="toggleValue" />
-    <label :for="id">{{ labelText }}</label>
+    <label :for="id" class="ml-1">{{ labelText }}</label>
   </div>
 </template>
 

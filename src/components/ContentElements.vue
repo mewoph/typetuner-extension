@@ -1,5 +1,5 @@
 <template>
-  <div class="content-elements flex mt-2 gap-2 flex-wrap">
+  <div class="content-elements flex mt-2 flex-wrap">
     <ContentElementSelector
       v-for="el in elementOptions"
       :key="el.tag"
