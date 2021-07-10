@@ -1,8 +1,8 @@
 {
   "manifest_version": 2,
   "name": "TypeTuner",
-  "homepage_url": "http://localhost:8080/",
-  "description": "Test web fonts in context",
+  "homepage_url": "https://github.com/mewoph/typetuner-extension",
+  "description": "Test local variable & static fonts in context",
   "default_locale": "en",
   "permissions": [
     "activeTab",

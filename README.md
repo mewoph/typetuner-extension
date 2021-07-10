@@ -1,6 +1,6 @@
 # TypeTuner
 
-Web extension for previewing local web font in context
+Web extension for previewing local variable and static fonts in context
 
 ## Project setup
 ```

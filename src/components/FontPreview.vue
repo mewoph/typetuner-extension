@@ -16,9 +16,9 @@
       {{previewText}}
     </div>
 
-    <div class="text-base" contenteditable="false" v-else>
-      {{ fontVariationSettings }}
-    </div>
+    <code v-html="cssPreview" v-else>
+    </code>
+
   </div>
 </template>
 
@@ -57,6 +57,13 @@ export default {
         return fontVariationSettings ? localize('inspectCta') : null;
       }
       return localize('previewCta');
+    },
+    cssPreview() {
+      const { fontFamily, fontVariationSettings } = this;
+      return `
+        font-family: ${fontFamily}; <br/>
+        font-variation-settings: ${fontVariationSettings};
+      `;
     },
     ...mapGetters(['fontVariationSettings']),
   },
