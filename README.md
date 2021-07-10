@@ -21,7 +21,7 @@ npm run serve
 The extension should be loaded in development mode.
 
 ### Testing this extension
-1. Download release from https://github.com/mewoph/font-calibrate-extension/releases
+1. Download release from https://github.com/mewoph/typetuner-extension/releases
 2. In Chrome, navigate to `chrome://extensions`
 2. Enable `Developer mode`
 3. Click load unpacked
