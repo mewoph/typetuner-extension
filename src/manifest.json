@@ -2,12 +2,10 @@
   "manifest_version": 2,
   "name": "TypeTuner",
   "homepage_url": "https://github.com/mewoph/typetuner-extension",
-  "description": "Test local variable & static fonts in context",
+  "description": "Test local variable & static fonts on any web page",
   "default_locale": "en",
   "permissions": [
-    "activeTab",
-    "<all_urls>",
-    "*://*/*"
+    "activeTab"
   ],
   "icons": {
     "16": "icons/16.png",
