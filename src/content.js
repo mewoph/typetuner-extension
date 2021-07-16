@@ -19,6 +19,7 @@ import {
 } from './utils/dom';
 
 browser.runtime.onMessage.addListener(async (request) => {
+
   const { message } = request;
   if (!message) {
     return;

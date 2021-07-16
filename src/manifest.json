@@ -4,9 +4,6 @@
   "homepage_url": "https://github.com/mewoph/typetuner-extension",
   "description": "Test local variable & static fonts on any web page",
   "default_locale": "en",
-  "permissions": [
-    "activeTab"
-  ],
   "icons": {
     "16": "icons/16.png",
     "19": "icons/19.png",
@@ -14,12 +11,6 @@
     "36": "icons/36.png",
     "48": "icons/48.png",
     "128": "icons/128.png"
-  },
-  "background": {
-    "scripts": [
-      "js/background.js"
-    ],
-    "persistent": false
   },
   "browser_action": {
     "default_popup": "popup.html",
