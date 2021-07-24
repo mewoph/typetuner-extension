@@ -1,43 +1,31 @@
 # TypeTuner
 
-Web extension for previewing local variable and static fonts in context
+TypeTuner is a web extension for previewing local variable and static fonts in context. The alpha version is available in the Chrome Web Store.
 
-## Project setup
-```
-npm install
-```
+## Features
 
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
+### Apply local font to a web page
+To use a local font on the web page, drag the font file into the drop area. After the font is loaded, the values for variable font axes can be customized.
 
-### Development
-1. In Chrome, navigate to `chrome://extensions`
-2. Enable `Developer mode`
-3. Click load unpacked
-4. Choose app's `dist` directory
+![Drop font file into the drop area to replace the web page's font](demo/demo_selectfont.gif)
 
-The extension should be loaded in development mode.
 
-### Testing this extension
-1. Download release from https://github.com/mewoph/typetuner-extension/releases
-2. In Chrome, navigate to `chrome://extensions`
-2. Enable `Developer mode`
-3. Click load unpacked
-4. Choose downloaded `dist` folder
+### Target font changes to certain elements
+To target specific elements on the page, toggle the element button under "Font Settings" tab.
 
-The extension should be loaded in development mode.
+![Drop font file into the drop area to replace the web page's font](demo/demo_selector.gif)
 
-### Compiles and minifies for production
-```
-npm run build
-```
 
-### Lints and fixes files
-```
-npm run lint
-```
+### Customize basic page settings
+To customize line length, page color and text justification, select "Page Settings" tab.
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+![Drop font file into the drop area to replace the web page's font](demo/demo_pagesettings.gif)
+
+## Bugs & Feature Requests
+
+To file bugs or request new features, please file a new issue [here](https://github.com/mewoph/typetuner-extension/issues) or feel free to email me at [hi@mewoph.xyz](mailto:hi@mewoph.xyz).
+
+## Contributing
+
+See [contribution guide](CONTRIBUTING.md) here.
+
