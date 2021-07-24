@@ -1,6 +1,8 @@
 # TypeTuner
 
-TypeTuner is a web extension for previewing local variable and static fonts in context. The alpha version is available in the Chrome Web Store.
+TypeTuner is a web extension for previewing local variable and static fonts in context. The alpha version is available in the [Chrome Web Store](https://chrome.google.com/webstore/detail/typetuner/pjjeiephojmhohpidbjndaipjahchjdh).
+
+The extension can be downloaded [here](https://chrome.google.com/webstore/detail/typetuner/pjjeiephojmhohpidbjndaipjahchjdh).
 
 ## Features
 
